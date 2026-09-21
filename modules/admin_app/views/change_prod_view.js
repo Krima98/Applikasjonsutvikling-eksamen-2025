@@ -1,0 +1,205 @@
+export class ChangeProductView extends HTMLElement {
+    constructor() {
+        super();
+        this.shadow = this.attachShadow({ mode: "open" });
+    }
+
+    //-----------------------------------------------------------------------
+    render(data) {
+        this.shadow.innerHTML = style;
+        this.makeHeader();
+        this.formData(data);
+        this.navigationListners();
+    }
+
+    //-----------------------------------------------------------------------
+    makeHeader() {
+        const headerDiv = document.createElement("div");
+        headerDiv.classList.add("header");
+        headerDiv.innerHTML = `
+            <h1>Change Product</h1>
+            <div class="headerButtons">
+                <button id="goHome">HOME</button>
+                <button id="goBack">go back</button>
+            </div>
+        `;
+        this.shadow.appendChild(headerDiv);
+    }
+
+    //-----------------------------------------------------------------------
+    formData(data) {
+        const formDiv = document.createElement("div");
+        formDiv.classList.add("form");
+        formDiv.innerHTML = `
+            <h1>${data.prodName}</h1>
+            <form id="formData">
+                
+                <input name="id" type="number" value="${data.prodId}" readonly>
+                <input name="name" type="text" placeholder="Product name">
+
+                <select name="category_id">
+                    <option value="">Category</option>
+                    <option value="1">Special</option>
+                    <option value="2">Caramel</option>
+                    <option value="3">Jelly</option>
+                    <option value="4">Marshmallow</option>
+                    <option value="5">Chocolate</option>
+                    <option value="6">Packaging</option>
+                    <option value="7">Equipment</option>
+                </select>
+
+                <input name="heading" type="text" placeholder="heading">
+                <textarea name="description" type="text" placeholder="Product description"></textarea>
+                <input name="energy" type="number" placeholder="Product energy">
+                <input name="fat" type="number" placeholder="Product fat">
+                <input name="protein" type="number" placeholder="Product protein">
+                <input name="carbohydrates" type="number" placeholder="Product carbohydrates">
+                <input name="price" type="number" placeholder="Product price">
+                <input name="discount" type="number" placeholder="Product discount">
+                <input id="stockInp" name="stock" type="number" placeholder="Product stock">
+                <input id="dateInp" name="expected_shipped" type="date">
+
+                <select name="reserved_members">
+                    <option value="">Member</option>
+                    <option value="true">yes</option>
+                    <option value="false">no</option>
+                </select>
+
+                <input name="img_file" id="imgFile" type="file">
+
+                <input id="changeBnt" type="submit" value="change">
+            </form>
+        `;
+        this.shadow.appendChild(formDiv);
+        this.isThereStock();
+        this.sendDataListener(data);
+    }
+
+    sendDataListener(data) {
+        const theForm = this.shadow.getElementById("formData");
+        theForm.addEventListener('submit', evt => {
+
+            evt.preventDefault();
+            const changeEvt = new CustomEvent("changeProduct", { composed: true, bubbles: true, detail: data.prodId });
+            changeEvt.productForm = new FormData(theForm);
+            this.shadow.dispatchEvent(changeEvt);
+        });
+    }
+
+    //-----------------------------------------------------------------------
+    isThereStock() {
+        const theForm = this.shadow.getElementById("formData");
+        const stockInput = this.shadow.getElementById("stockInp");
+        const dateInput = this.shadow.getElementById("dateInp");
+
+        theForm.addEventListener('change', evt => {
+            if (Number(stockInput.value) > 0) {
+                dateInput.style.display = "none";
+            } else {
+                dateInput.style.display = "";
+            }
+        });
+    }
+
+    //-----------------------------------------------------------------------
+    navigationListners() {
+        const goBackBtn = this.shadow.getElementById("goBack");
+        const homeBtn = this.shadow.getElementById("goHome");
+
+        goBackBtn.addEventListener('click', evt => {
+            const goHomeEvt = new CustomEvent("goBackDetail", { composed: true, bubbles: true });
+            this.shadow.dispatchEvent(goHomeEvt);
+        });
+
+        homeBtn.addEventListener('click', evt => {
+            const goHomeEvt = new CustomEvent("goHome", { composed: true, bubbles: true });
+            this.shadow.dispatchEvent(goHomeEvt);
+        });
+    }
+}
+
+//-----------------------------------------------------------------------
+customElements.define("change-product", ChangeProductView);
+//-----------------------------------------------------------------------
+
+const style = `
+    <style>
+        .header {
+            color: rgb(233, 233, 233);
+            background-color: rgba(15, 15, 15, 1);
+            padding: 10px;         
+        }
+
+        #goHome, #goBack {
+            border: none;
+            border-radius: 5px;
+            height: 40px;
+            width: 100px;
+            padding: 10px; 
+            color: black;
+            background: rgba(46, 228, 107, 1);
+            transition: 0.3s;
+        }
+
+        #goHome:hover, #goBack:hover, #changeBnt:hover {
+            cursor: pointer;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1) inset; 
+        }
+
+        .form {
+           margin: 0px 30px;
+        }
+
+        #formData {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type=text], input[type=number], input[type=email], input[type=date], select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus, input[type=number]:focus, input[type=email]:focus, select:focus{
+            outline: none;
+            box-shadow: 0px 0px 5px 0px rgb(142, 142, 142) inset;
+        }
+
+        input[type="text"]:hover, input[type=number]:hover, input[type=email]:hover, select:hover{
+            box-shadow: 0px 0px 5px 0px rgb(142, 142, 142) inset;
+        }
+
+        textarea {
+            height: 80px;
+            resize: none;
+            border: none;
+            border-radius: 4px;
+            padding: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        textarea:hover, select:hover {
+            box-shadow: 0px 0px 5px 0px rgb(142, 142, 142) inset;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            box-shadow: 0px 0px 5px 0px rgb(142, 142, 142) inset;
+        }
+
+        #changeBnt {
+            width: 100px;
+            align-self: center;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            background: rgba(46, 228, 107, 1);
+            transition: 0.3s;
+            padding: 10px; 
+        }
+    </style>
+`;
