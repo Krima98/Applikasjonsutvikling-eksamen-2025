@@ -1,6 +1,6 @@
 # Applikasjonsutvikling Eksamen 2025
 
-> **Note:** The application does not provide a `BASE_URL` or `API_KEY` due to ethical/academic reasons. They still work and can be provided upon request.
+> **Note:** The application does not provide a `BASE_URL` or `API_KEY` due to ethical/academic reasons. Therefore, running this code directly won't work, but they can be provided upon request.
 
 ## About project
 This project was developed as the final exam for **MM-206 Applikasjonsutvikling 1** at the University of Agder. The task was to build a Single Page Application (SPA) communicating with a provided REST API using an API key. 
