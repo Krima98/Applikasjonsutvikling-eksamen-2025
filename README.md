@@ -33,7 +33,7 @@ The application is a web store where users can browse and order different chocol
 ---
 
 ## What I Learned
-* Interacting with a REST API to perform various requests (`GET`, `PUT`, `DELETE`, etc.) using queries.
+* Interacting with a REST API to perform CRUD operations (`GET`, `PUT`, `POST`, `DELETE`) using queries.
 * Handling asynchronous operations.
 * Managing authentication tokens.
 * Utilizing `localStorage` for state persistence.
